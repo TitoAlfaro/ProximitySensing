@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ProximitySensing</string>
+    <string name="hello_world">Proximity Sense</string>
+    <string name="action_settings">Settings</string>
+    <string name="LEDebug">Debug Off</string>
+    <string name="distance">Distance: </string>
+    <string name="VibRate">Rate: </string>
+
+</resources>
