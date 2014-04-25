@@ -9,21 +9,24 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ProximitySense_Main extends IOIOActivity {
+public class ProximitySense_Main extends IOIOActivity implements OnClickListener{
 	private final String TAG = "ProximitySensing";
-
 	private ToggleButton button_;
 	
 	//Proximity
 	private int sensorPin = 41;
 	private AnalogInput proximityData;
-	private float distance;
+	float distance = 1;
 	
 	//UI
-	private TextView distanceValue, _vibRate;
+	private TextView distanceValue, _vibRate, mSensitivityValue;
+	private Button ButtonPlus, ButtonMinus;
 	
 	//MultiThreading
 	private Thread Vibration;
@@ -31,8 +34,9 @@ public class ProximitySense_Main extends IOIOActivity {
 	
 	//Vibration
 	float rate = 1000;
+	float initialRate = 500;
 	DigitalOutput out;
-	private int sensitivityFactor = 50;
+	private int sensitivityFactor = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,14 @@ public class ProximitySense_Main extends IOIOActivity {
 		setContentView(R.layout.activity_proximity_sense__main);
 		button_ = (ToggleButton) findViewById(R.id.LEDebug);
 		
+		ButtonPlus = (Button) findViewById(R.id.ButtonPlus);
+		ButtonPlus.setOnClickListener(this);
+		ButtonMinus = (Button) findViewById(R.id.ButtonMinus);
+		ButtonMinus.setOnClickListener(this);
+		
 		distanceValue = (TextView)findViewById(R.id.distance);
 		_vibRate = (TextView)findViewById(R.id.VibRate);
+		mSensitivityValue = (TextView)findViewById(R.id.Sensitivity);	
 		
 	}
 
@@ -65,7 +75,6 @@ public class ProximitySense_Main extends IOIOActivity {
 
 		@Override
 		public void loop() throws ConnectionLostException {
-			//led_.write(!button_.isChecked());
 			try {
 				distance = proximityData.getVoltage();
 				Thread.sleep(500);
@@ -77,6 +86,16 @@ public class ProximitySense_Main extends IOIOActivity {
 					distanceValue.setText("Distance: "+ distance);
 				}
 			});
+		}
+		@Override
+		public void disconnected() {
+			Log.i(TAG, "IOIO disconnected");
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -102,18 +121,15 @@ public class ProximitySense_Main extends IOIOActivity {
 					out = ioio_.openDigitalOutput(13,false);
 					while (true) {
 						if (distance == 0){
-							rate = 100;
+							rate = initialRate - sensitivityFactor;
 						}else{
-							rate = map(distance, (float) 0.0, (float) 2.0, (float) 200.0, (float) 20.0);
-							if (rate < 0){
-								rate = 0;
-							}
+							rate = map(distance, (float) 0.0, (float) 2.0, (float) initialRate - sensitivityFactor, (float) 20.0);
 						}
 						
 						_vibRate.post(new Runnable() {
 							public void run() {
 								_vibRate.setText("Rate: "+ rate);
-								//mSensitivityValue.setText("Sensitivity: "+ sensitivityFactor);
+								mSensitivityValue.setText("Sensitivity: "+ sensitivityFactor);
 							}
 						});
 						
@@ -138,6 +154,20 @@ public class ProximitySense_Main extends IOIOActivity {
 			}
     	}
     }
+	
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+		case R.id.ButtonPlus:
+			sensitivityFactor = sensitivityFactor + 10;
+			break;
+
+		case R.id.ButtonMinus:
+			sensitivityFactor = sensitivityFactor - 10;
+			break;
+		}
+		
+	}
 	
 	float map(float x, float in_min, float in_max, float out_min, float out_max)
 	{

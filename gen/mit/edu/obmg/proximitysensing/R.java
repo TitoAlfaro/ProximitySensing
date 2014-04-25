@@ -1080,7 +1080,14 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020057;
     }
     public static final class id {
+        public static final int ActorBar=0x7f060045;
+        public static final int ActorVal=0x7f060044;
+        public static final int ButtonMinus=0x7f060041;
+        public static final int ButtonPlus=0x7f060040;
         public static final int LEDebug=0x7f06003c;
+        public static final int Sensitivity=0x7f06003f;
+        public static final int SensorBar=0x7f060043;
+        public static final int SensorVal=0x7f060042;
         public static final int VibRate=0x7f06003e;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
@@ -1093,7 +1100,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f06003f;
+        public static final int action_settings=0x7f060046;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1203,7 +1210,12 @@ containing a value of this type.
         public static final int proximity_sense__main=0x7f0d0000;
     }
     public static final class string {
+        public static final int ActorVal=0x7f0b0017;
+        public static final int ButtonMinus=0x7f0b0015;
+        public static final int ButtonPlus=0x7f0b0014;
         public static final int LEDebug=0x7f0b0010;
+        public static final int Sensitivity=0x7f0b0013;
+        public static final int SensorVal=0x7f0b0016;
         public static final int VibRate=0x7f0b0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
@@ -2630,7 +2642,7 @@ containing a value of this type.
          */
         public static final int[] MenuView = {
             0x010100ae, 0x0101012c, 0x0101012d, 0x0101012e,
-            0x0101012f, 0x01010130, 0x01010131, 0x010103f8
+            0x0101012f, 0x01010130, 0x01010131, 0x010103ea
         };
         /**
           <p>
