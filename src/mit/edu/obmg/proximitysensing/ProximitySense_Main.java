@@ -1,5 +1,6 @@
 package mit.edu.obmg.proximitysensing;
 
+import mit.edu.obmg.proximitysensing.RangeSeekBar.OnRangeSeekBarChangeListener;
 import ioio.lib.api.AnalogInput;
 import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
@@ -11,11 +12,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ProximitySense_Main extends IOIOActivity implements OnClickListener{
+public class ProximitySense_Main extends IOIOActivity implements /*OnClickListener,*/ OnSeekBarChangeListener{
 	private final String TAG = "ProximitySensing";
 	private ToggleButton button_;
 	
@@ -25,8 +30,10 @@ public class ProximitySense_Main extends IOIOActivity implements OnClickListener
 	float distance = 1;
 	
 	//UI
-	private TextView distanceValue, _vibRate, mSensitivityValue;
+	private TextView distanceValue, _vibRate, mSensitivityValue, mActorValue, mSensorValue;
 	private Button ButtonPlus, ButtonMinus;
+	private SeekBar SensorBar, ActorBar, RangeBar;
+	private NumberPicker minSensor, maxSensor;
 	
 	//MultiThreading
 	private Thread Vibration;
@@ -44,14 +51,38 @@ public class ProximitySense_Main extends IOIOActivity implements OnClickListener
 		setContentView(R.layout.activity_proximity_sense__main);
 		button_ = (ToggleButton) findViewById(R.id.LEDebug);
 		
+		/*
 		ButtonPlus = (Button) findViewById(R.id.ButtonPlus);
 		ButtonPlus.setOnClickListener(this);
 		ButtonMinus = (Button) findViewById(R.id.ButtonMinus);
 		ButtonMinus.setOnClickListener(this);
+
+		SensorBar = (SeekBar)findViewById(R.id.SensorBar);
+		SensorBar.setEnabled(true);
+		ActorBar = (SeekBar)findViewById(R.id.ActorBar);
+		ActorBar.setEnabled(true);
+		*/
+		
+		minSensor = (NumberPicker)findViewById(R.id.minSensor);
+		String[] nums = new String[21];
+	    for(int i=0; i<nums.length; i++)
+	           nums[i] = Integer.toString(i);
+	    minSensor.setMinValue(0);
+	    minSensor.setMaxValue(20);
+	    minSensor.setWrapSelectorWheel(false);
+	    minSensor.setDisplayedValues(nums);
+	    minSensor.setValue(0);
+	    
+		maxSensor = (NumberPicker)findViewById(R.id.maxSensor); 
+		maxSensor.setMinValue(0);
+		maxSensor.setMaxValue(20);
+		maxSensor.setWrapSelectorWheel(false);
+		maxSensor.setDisplayedValues(nums);
+		maxSensor.setValue(20);
 		
 		distanceValue = (TextView)findViewById(R.id.distance);
 		_vibRate = (TextView)findViewById(R.id.VibRate);
-		mSensitivityValue = (TextView)findViewById(R.id.Sensitivity);	
+		//mSensitivityValue = (TextView)findViewById(R.id.Sensitivity);	
 		
 	}
 
@@ -123,13 +154,13 @@ public class ProximitySense_Main extends IOIOActivity implements OnClickListener
 						if (distance == 0){
 							rate = initialRate - sensitivityFactor;
 						}else{
-							rate = map(distance, (float) 0.0, (float) 2.0, (float) initialRate - sensitivityFactor, (float) 20.0);
+							rate = map(distance, (float) minSensor.getValue()/10, (float) maxSensor.getValue()/10, (float) initialRate - sensitivityFactor, (float) 20.0);
 						}
 						
 						_vibRate.post(new Runnable() {
 							public void run() {
 								_vibRate.setText("Rate: "+ rate);
-								mSensitivityValue.setText("Sensitivity: "+ sensitivityFactor);
+								//mSensitivityValue.setText("Sensitivity: "+ sensitivityFactor);
 							}
 						});
 						
@@ -154,7 +185,7 @@ public class ProximitySense_Main extends IOIOActivity implements OnClickListener
 			}
     	}
     }
-	
+	/*
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()){
@@ -168,9 +199,28 @@ public class ProximitySense_Main extends IOIOActivity implements OnClickListener
 		}
 		
 	}
-	
+	*/
 	float map(float x, float in_min, float in_max, float out_min, float out_max)
 	{
 	  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	}
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
 	}
 }

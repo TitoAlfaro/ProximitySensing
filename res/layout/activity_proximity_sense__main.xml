@@ -38,7 +38,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/VibRate"
         android:textSize="30sp"  />
-    
+<!-- 
     <TextView
         android:id="@+id/Sensitivity"
         android:layout_width="wrap_content"
@@ -101,5 +101,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/ActorVal" />
+        
+         -->
+
+    <NumberPicker
+        android:id="@+id/minSensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/VibRate"
+        android:layout_below="@+id/VibRate"
+        android:layout_marginTop="22dp" />
+
+    <NumberPicker
+        android:id="@+id/maxSensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/minSensor"
+        android:layout_toRightOf="@+id/minSensor" />
 
 </RelativeLayout>
