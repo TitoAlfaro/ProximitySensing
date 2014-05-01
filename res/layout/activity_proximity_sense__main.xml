@@ -38,85 +38,36 @@
         android:layout_marginTop="10dp"
         android:text="@string/VibRate"
         android:textSize="30sp"  />
-<!-- 
-    <TextView
-        android:id="@+id/Sensitivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/VibRate"
-        android:layout_below="@+id/VibRate"
-        android:layout_marginTop="36dp"
-        android:text="@string/Sensitivity"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/ButtonPlus"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+   
+    <NumberPicker
+        android:id="@+id/minActor"
+        android:layout_width="50dip"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/Sensitivity"
-        android:layout_alignBottom="@+id/Sensitivity"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/Sensitivity"
-        android:text="@string/ButtonPlus" />
-
-    <Button
-        android:id="@+id/ButtonMinus"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/ButtonPlus"
-        android:layout_alignBottom="@+id/ButtonPlus"
-        android:layout_toRightOf="@+id/ButtonPlus"
-        android:text="@string/ButtonMinus" />
-
-     <TextView
-        android:id="@+id/SensorVal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ButtonMinus"
-        android:layout_marginTop="36dp"
-        android:text="@string/SensorVal"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-     
-    <SeekBar
-        android:id="@+id/SensorBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/SensorVal" />
-
-    <TextView
-        android:id="@+id/ActorVal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/SensorBar"
-        android:layout_marginTop="36dp"
-        android:text="@string/ActorVal"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <SeekBar
-        android:id="@+id/ActorBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ActorVal" />
-        
-         -->
+        android:layout_alignTop="@+id/maxSensor"
+        android:layout_toLeftOf="@+id/maxActor" />
 
     <NumberPicker
         android:id="@+id/minSensor"
-        android:layout_width="wrap_content"
+        android:layout_width="50dip"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/VibRate"
         android:layout_below="@+id/VibRate"
-        android:layout_marginTop="22dp" />
+        android:layout_marginTop="24dp" />
 
     <NumberPicker
         android:id="@+id/maxSensor"
-        android:layout_width="wrap_content"
+        android:layout_width="50dip"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/minSensor"
         android:layout_toRightOf="@+id/minSensor" />
+
+    <NumberPicker
+        android:id="@+id/maxActor"
+        android:layout_width="50dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/minActor"
+        android:layout_marginRight="48dp" />
 
 </RelativeLayout>

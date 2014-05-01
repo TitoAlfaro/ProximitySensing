@@ -1095,7 +1095,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f060041;
+        public static final int action_settings=0x7f060043;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1117,9 +1117,11 @@ containing a value of this type.
         public static final int image=0x7f060027;
         public static final int listMode=0x7f060001;
         public static final int list_item=0x7f060029;
+        public static final int maxActor=0x7f060041;
         public static final int maxSensor=0x7f060040;
         public static final int middle=0x7f060012;
-        public static final int minSensor=0x7f06003f;
+        public static final int minActor=0x7f06003f;
+        public static final int minSensor=0x7f060042;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
         public static final int normal=0x7f060000;
@@ -1207,12 +1209,11 @@ containing a value of this type.
         public static final int proximity_sense__main=0x7f0d0000;
     }
     public static final class string {
-        public static final int ActorVal=0x7f0b0017;
-        public static final int ButtonMinus=0x7f0b0015;
-        public static final int ButtonPlus=0x7f0b0014;
+        public static final int ActorMaxVal=0x7f0b0016;
+        public static final int ActorMinVal=0x7f0b0015;
         public static final int LEDebug=0x7f0b0010;
-        public static final int Sensitivity=0x7f0b0013;
-        public static final int SensorVal=0x7f0b0016;
+        public static final int SensorMaxVal=0x7f0b0014;
+        public static final int SensorMinVal=0x7f0b0013;
         public static final int VibRate=0x7f0b0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */

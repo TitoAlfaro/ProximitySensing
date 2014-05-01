@@ -7,10 +7,9 @@
     <string name="LEDebug">Debug Off</string>
     <string name="distance">Distance: </string>
     <string name="VibRate">Rate: </string>
-    <string name="Sensitivity"> Sensitivity: 1.0</string>
-    <string name="ButtonPlus">+</string>
-    <string name="ButtonMinus">-</string>
-    <string name="SensorVal">Sensor Values</string>
-    <string name="ActorVal">Actor Values</string>
+    <string name="SensorMinVal">0.0</string>
+    <string name="SensorMaxVal">3.0</string>
+    <string name="ActorMinVal">0</string>
+    <string name="ActorMaxVal">1000</string>
 
 </resources>

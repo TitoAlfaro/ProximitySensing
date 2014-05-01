@@ -1,6 +1,5 @@
 package mit.edu.obmg.proximitysensing;
 
-import mit.edu.obmg.proximitysensing.RangeSeekBar.OnRangeSeekBarChangeListener;
 import ioio.lib.api.AnalogInput;
 import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
@@ -10,17 +9,13 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ProximitySense_Main extends IOIOActivity implements /*OnClickListener,*/ OnSeekBarChangeListener{
+public class ProximitySense_Main extends IOIOActivity {
 	private final String TAG = "ProximitySensing";
 	private ToggleButton button_;
 	
@@ -30,20 +25,16 @@ public class ProximitySense_Main extends IOIOActivity implements /*OnClickListen
 	float distance = 1;
 	
 	//UI
-	private TextView distanceValue, _vibRate, mSensitivityValue, mActorValue, mSensorValue;
-	private Button ButtonPlus, ButtonMinus;
-	private SeekBar SensorBar, ActorBar, RangeBar;
-	private NumberPicker minSensor, maxSensor;
+	private TextView distanceValue, _vibRate;
+	private NumberPicker minSensor, maxSensor, minActor, maxActor;
 	
 	//MultiThreading
 	private Thread Vibration;
 	Thread thread = new Thread(Vibration);
 	
 	//Vibration
-	float rate = 1000;
-	float initialRate = 500;
+	float rate;
 	DigitalOutput out;
-	private int sensitivityFactor = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,38 +42,50 @@ public class ProximitySense_Main extends IOIOActivity implements /*OnClickListen
 		setContentView(R.layout.activity_proximity_sense__main);
 		button_ = (ToggleButton) findViewById(R.id.LEDebug);
 		
-		/*
-		ButtonPlus = (Button) findViewById(R.id.ButtonPlus);
-		ButtonPlus.setOnClickListener(this);
-		ButtonMinus = (Button) findViewById(R.id.ButtonMinus);
-		ButtonMinus.setOnClickListener(this);
-
-		SensorBar = (SeekBar)findViewById(R.id.SensorBar);
-		SensorBar.setEnabled(true);
-		ActorBar = (SeekBar)findViewById(R.id.ActorBar);
-		ActorBar.setEnabled(true);
-		*/
+		distanceValue = (TextView)findViewById(R.id.distance);
+		_vibRate = (TextView)findViewById(R.id.VibRate);
 		
-		minSensor = (NumberPicker)findViewById(R.id.minSensor);
-		String[] nums = new String[21];
-	    for(int i=0; i<nums.length; i++)
-	           nums[i] = Integer.toString(i);
-	    minSensor.setMinValue(0);
-	    minSensor.setMaxValue(20);
-	    minSensor.setWrapSelectorWheel(false);
-	    minSensor.setDisplayedValues(nums);
-	    minSensor.setValue(0);
+		String[] sensorNums = new String[21];
+	    for(int i=0; i<sensorNums.length; i++){
+			float dec = i/10.0f;
+	    	sensorNums[i] = Float.toString(dec);
+	    }
 	    
+		minSensor = (NumberPicker)findViewById(R.id.minSensor);
+	    minSensor.setMinValue(0);
+	    minSensor.setMaxValue(30);
+	    minSensor.setWrapSelectorWheel(false);
+	    minSensor.setDisplayedValues(sensorNums);
+	    minSensor.setValue(0);
+	    minSensor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
 		maxSensor = (NumberPicker)findViewById(R.id.maxSensor); 
 		maxSensor.setMinValue(0);
 		maxSensor.setMaxValue(20);
 		maxSensor.setWrapSelectorWheel(false);
-		maxSensor.setDisplayedValues(nums);
-		maxSensor.setValue(20);
-		
-		distanceValue = (TextView)findViewById(R.id.distance);
-		_vibRate = (TextView)findViewById(R.id.VibRate);
-		//mSensitivityValue = (TextView)findViewById(R.id.Sensitivity);	
+		maxSensor.setDisplayedValues(sensorNums);
+		maxSensor.setValue(30);
+	    maxSensor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+	    
+	    String[] actorNums = new String[990];
+	    for(int i=0; i<actorNums.length; i++)
+	    	actorNums[i] = Integer.toString(i+10);
+	    
+	    minActor = (NumberPicker)findViewById(R.id.minActor);
+	    minActor.setMinValue(10);
+	    minActor.setMaxValue(999);
+	    minActor.setWrapSelectorWheel(false);
+	    minActor.setDisplayedValues(actorNums);
+	    minActor.setValue(10);
+	    minActor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+		maxActor = (NumberPicker)findViewById(R.id.maxActor); 
+		maxActor.setMinValue(10);
+		maxActor.setMaxValue(999);
+		maxActor.setWrapSelectorWheel(false);
+		maxActor.setDisplayedValues(actorNums);
+		maxActor.setValue(999);
+		maxActor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 		
 	}
 
@@ -114,7 +117,7 @@ public class ProximitySense_Main extends IOIOActivity implements /*OnClickListen
 			
 			distanceValue.post(new Runnable() {
 				public void run() {
-					distanceValue.setText("Distance: "+ distance);
+					distanceValue.setText("Voltage: "+ distance);
 				}
 			});
 		}
@@ -151,23 +154,28 @@ public class ProximitySense_Main extends IOIOActivity implements /*OnClickListen
 					led = ioio_.openDigitalOutput(0, true);
 					out = ioio_.openDigitalOutput(13,false);
 					while (true) {
-						if (distance == 0){
-							rate = initialRate - sensitivityFactor;
+						if (distance < minSensor.getValue()/10){
+							rate = maxActor.getValue();
+						}else if (distance > maxSensor.getValue()/10){
+							rate = minActor.getValue();
 						}else{
-							rate = map(distance, (float) minSensor.getValue()/10, (float) maxSensor.getValue()/10, (float) initialRate - sensitivityFactor, (float) 20.0);
+							rate = map(distance, 	(float) minSensor.getValue()/10, 
+													(float) maxSensor.getValue()/10, 
+													(float) maxActor.getValue(), 
+													(float) minActor.getValue());
+							Log.i(TAG, "minSensor/10 = "+ minSensor.getValue());
 						}
 						
 						_vibRate.post(new Runnable() {
 							public void run() {
 								_vibRate.setText("Rate: "+ rate);
-								//mSensitivityValue.setText("Sensitivity: "+ sensitivityFactor);
 							}
 						});
 						
-						led.write(true);
-						out.write(true);
-						sleep((long) rate);
 						led.write(false);
+						out.write(true);
+						sleep((long) 50);
+						led.write(true);
 						out.write(false);
 						sleep((long) rate);
 					}
@@ -185,42 +193,9 @@ public class ProximitySense_Main extends IOIOActivity implements /*OnClickListen
 			}
     	}
     }
-	/*
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()){
-		case R.id.ButtonPlus:
-			sensitivityFactor = sensitivityFactor + 10;
-			break;
-
-		case R.id.ButtonMinus:
-			sensitivityFactor = sensitivityFactor - 10;
-			break;
-		}
-		
-	}
-	*/
+	
 	float map(float x, float in_min, float in_max, float out_min, float out_max)
 	{
 	  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-	}
-
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
 	}
 }
