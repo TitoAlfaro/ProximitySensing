@@ -45,10 +45,10 @@ public class ProximitySense_Main extends IOIOActivity {
 		distanceValue = (TextView)findViewById(R.id.distance);
 		_vibRate = (TextView)findViewById(R.id.VibRate);
 		
-		String[] sensorNums = new String[21];
+		String[] sensorNums = new String[31];
 	    for(int i=0; i<sensorNums.length; i++){
-			float dec = i/10.0f;
-	    	sensorNums[i] = Float.toString(dec);
+			//float dec = i/10.0f;
+	    	sensorNums[i] = Integer.toString(i);
 	    }
 	    
 		minSensor = (NumberPicker)findViewById(R.id.minSensor);
@@ -64,7 +64,7 @@ public class ProximitySense_Main extends IOIOActivity {
 		maxSensor.setMaxValue(20);
 		maxSensor.setWrapSelectorWheel(false);
 		maxSensor.setDisplayedValues(sensorNums);
-		maxSensor.setValue(30);
+		maxSensor.setValue(20);
 	    maxSensor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 	    
 	    String[] actorNums = new String[990];
@@ -110,7 +110,7 @@ public class ProximitySense_Main extends IOIOActivity {
 		@Override
 		public void loop() throws ConnectionLostException {
 			try {
-				distance = proximityData.getVoltage();
+				distance = proximityData.getVoltage()*10;
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 			}
@@ -154,15 +154,15 @@ public class ProximitySense_Main extends IOIOActivity {
 					led = ioio_.openDigitalOutput(0, true);
 					out = ioio_.openDigitalOutput(13,false);
 					while (true) {
-						if (distance < minSensor.getValue()/10){
-							rate = maxActor.getValue();
-						}else if (distance > maxSensor.getValue()/10){
-							rate = minActor.getValue();
+						if (distance < minSensor.getValue()){
+							rate = 1000;
+						}else if (distance > maxSensor.getValue()){
+							rate = 5;
 						}else{
-							rate = map(distance, 	(float) minSensor.getValue()/10, 
-													(float) maxSensor.getValue()/10, 
-													(float) maxActor.getValue(), 
-													(float) minActor.getValue());
+							rate = map(distance, 	(float) 0,//minSensor.getValue(), 
+													(float) 20,//maxSensor.getValue(), 
+													(float) 1000, 
+													(float) 5);
 							Log.i(TAG, "minSensor/10 = "+ minSensor.getValue());
 						}
 						
