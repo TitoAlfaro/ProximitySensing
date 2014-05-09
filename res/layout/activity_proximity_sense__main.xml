@@ -13,39 +13,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
-    
-    <ToggleButton 
-        android:id="@+id/LEDebug"
-        android:layout_below="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/LEDebug" />
-    
+
     <TextView
-        android:id="@+id/distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/LEDebug"
-        android:layout_marginTop="10dp"
-        android:text="@string/distance"
-        android:textSize="30sp" />
-    
-    <TextView 
         android:id="@+id/VibRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/distance"
         android:layout_marginTop="10dp"
         android:text="@string/VibRate"
-        android:textSize="30sp"  />
-
-   
-    <NumberPicker
-        android:id="@+id/minActor"
-        android:layout_width="50dip"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/maxSensor"
-        android:layout_toLeftOf="@+id/maxActor" />
+        android:textSize="30sp" />
 
     <NumberPicker
         android:id="@+id/minSensor"
@@ -62,12 +38,35 @@
         android:layout_alignTop="@+id/minSensor"
         android:layout_toRightOf="@+id/minSensor" />
 
-    <NumberPicker
-        android:id="@+id/maxActor"
-        android:layout_width="50dip"
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/minActor"
-        android:layout_marginRight="48dp" />
+        android:layout_alignLeft="@+id/VibRate"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="78dp"
+        android:text="@string/distance"
+        android:textSize="30sp" />
+
+    <RadioGroup
+        android:id="@+id/RG"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title" >
+
+        <RadioButton
+            android:id="@+id/radioSonar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioClick"
+            android:text="Sonar" />
+
+        <RadioButton
+            android:id="@+id/radioIR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioClick"
+            android:text="IR" />
+    </RadioGroup>
 
 </RelativeLayout>

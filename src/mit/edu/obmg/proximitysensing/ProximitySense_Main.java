@@ -9,15 +9,17 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class ProximitySense_Main extends IOIOActivity {
 	private final String TAG = "ProximitySensing";
-	private ToggleButton button_;
 	
 	//Proximity
 	private int sensorPin = 41;
@@ -26,7 +28,10 @@ public class ProximitySense_Main extends IOIOActivity {
 	
 	//UI
 	private TextView distanceValue, _vibRate;
-	private NumberPicker minSensor, maxSensor, minActor, maxActor;
+	private NumberPicker minSensor, maxSensor;
+	private RadioGroup RG;
+	private RadioButton radioSonar, radioIR;
+	private boolean flagIR, flagSonar;
 	
 	//MultiThreading
 	private Thread Vibration;
@@ -40,7 +45,9 @@ public class ProximitySense_Main extends IOIOActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_proximity_sense__main);
-		button_ = (ToggleButton) findViewById(R.id.LEDebug);
+		
+		radioSonar = (RadioButton)findViewById(R.id.radioSonar);
+		radioSonar = (RadioButton)findViewById(R.id.radioIR);
 		
 		distanceValue = (TextView)findViewById(R.id.distance);
 		_vibRate = (TextView)findViewById(R.id.VibRate);
@@ -66,27 +73,6 @@ public class ProximitySense_Main extends IOIOActivity {
 		maxSensor.setDisplayedValues(sensorNums);
 		maxSensor.setValue(20);
 	    maxSensor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-	    
-	    String[] actorNums = new String[990];
-	    for(int i=0; i<actorNums.length; i++)
-	    	actorNums[i] = Integer.toString(i+10);
-	    
-	    minActor = (NumberPicker)findViewById(R.id.minActor);
-	    minActor.setMinValue(10);
-	    minActor.setMaxValue(999);
-	    minActor.setWrapSelectorWheel(false);
-	    minActor.setDisplayedValues(actorNums);
-	    minActor.setValue(10);
-	    minActor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-
-		maxActor = (NumberPicker)findViewById(R.id.maxActor); 
-		maxActor.setMinValue(10);
-		maxActor.setMaxValue(999);
-		maxActor.setWrapSelectorWheel(false);
-		maxActor.setDisplayedValues(actorNums);
-		maxActor.setValue(999);
-		maxActor.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-		
 	}
 
 	class Looper extends BaseIOIOLooper {
@@ -138,6 +124,27 @@ public class ProximitySense_Main extends IOIOActivity {
 		return new Looper();
 	}
 	
+	public void onRadioClick(View view){
+		//Is the button checked?
+		boolean checked = ((RadioButton) view).isChecked();
+		
+		//which button was it?
+		switch (view.getId()){
+		case R.id.radioIR:
+			if(checked){
+				flagIR = true;
+			//	RG.clearCheck();
+			}
+			break;
+		case R.id.radioSonar:
+			if(checked){
+				flagSonar = true;
+			//	RG.clearCheck();
+			}
+			break;
+			
+		}
+	}
 	class Vibration extends Thread{
     	private DigitalOutput led;
     	
@@ -159,11 +166,20 @@ public class ProximitySense_Main extends IOIOActivity {
 						}else if (distance > maxSensor.getValue()){
 							rate = 5;
 						}else{
-							rate = map(distance, 	(float) 0,//minSensor.getValue(), 
-													(float) 20,//maxSensor.getValue(), 
-													(float) 1000, 
-													(float) 5);
-							Log.i(TAG, "minSensor/10 = "+ minSensor.getValue());
+							if(flagIR){
+								Log.i(TAG, "IR");
+								rate = map(distance, 	(float) 0,//minSensor.getValue(), 
+														(float) 20,//maxSensor.getValue(), 
+														(float) 1000, 
+														(float) 5);
+								Log.i(TAG, "minSensor/10 = "+ minSensor.getValue());
+							}else{
+								Log.i(TAG, "Sonar");
+								rate = map(distance, 	(float) 0,//minSensor.getValue(), 
+														(float) 20,//maxSensor.getValue(), 
+														(float) 5, 
+														(float) 1000);
+							}
 						}
 						
 						_vibRate.post(new Runnable() {
